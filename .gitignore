@@ -1,0 +1,27 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# GoLand project files
+.idea/
+
+# Ignore vendor directory if you use Go modules
+/vendor/
+
+# Ignore dependency files created by Go tools
+go.sum
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore logs, temp files, and build artifacts
+*.log
+*.tmp
+*.swp
