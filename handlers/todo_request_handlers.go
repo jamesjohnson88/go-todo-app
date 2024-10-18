@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/labstack/echo/v4"
+	"go-todo-app/data"
 	"go-todo-app/models"
 	"net/http"
 )
@@ -21,7 +22,9 @@ func CreateTodoItem(c echo.Context) error {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	return c.String(http.StatusCreated, "Created: "+ti.Title)
+	id := data.CreateTodoItem(ti)
+
+	return c.String(http.StatusCreated, "Created with id: "+id)
 }
 
 func UpdateTodoItem(c echo.Context) error {
