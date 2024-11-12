@@ -1,8 +1,8 @@
 -- Create the database (run this when connected to postgres)
-CREATE DATABASE todo_app;
+CREATE DATABASE go_todo_app;
 
 -- Then connect to the todo_app database before running:
-\c todo_app
+\c go_todo_app
 
 -- Create UUID extension if not already enabled
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

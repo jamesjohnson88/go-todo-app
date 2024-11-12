@@ -28,3 +28,4 @@ go.sum
 *.log
 *.tmp
 *.swp
+/.air.toml

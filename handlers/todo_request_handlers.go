@@ -22,9 +22,15 @@ func CreateTodoItem(c echo.Context) error {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	id := data.CreateTodoItem(ti)
+	item, dbErr := data.CreateTodoItem(ti)
+	if dbErr != nil {
+		return c.String(http.StatusInternalServerError, dbErr.Error())
+	}
 
-	return c.String(http.StatusCreated, "Created with id: "+id)
+	location := c.Request().Host + c.Echo().URI(GetTodoItem, item.Id)
+	c.Response().Header().Set("Location", location)
+
+	return c.JSON(http.StatusCreated, item)
 }
 
 func UpdateTodoItem(c echo.Context) error {
