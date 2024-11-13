@@ -11,5 +11,5 @@ type TodoItem struct {
 	UpdatedAt   time.Time  `json:"updated_at"`
 	DueDate     *time.Time `json:"due_date,omitempty"`
 	Priority    int        `json:"priority"`
-	UserId      string     `json:"user_id,omitempty"`
+	UserId      *string    `json:"user_id,omitempty"`
 }

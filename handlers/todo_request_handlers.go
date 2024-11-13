@@ -8,12 +8,26 @@ import (
 )
 
 func GetAllTodoItems(c echo.Context) error {
-	return c.String(http.StatusOK, "Get All Todo Items")
+	items, err := data.GetTodoItems()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, items)
 }
 
 func GetTodoItem(c echo.Context) error {
 	itemId := c.Param("id")
-	return c.String(http.StatusOK, "Get Todo Item By Id: "+itemId)
+	item, err := data.GetTodoItemById(itemId)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	if item == nil {
+		return c.JSON(http.StatusNotFound, "Item not found")
+	}
+
+	return c.JSON(http.StatusOK, item)
 }
 
 func CreateTodoItem(c echo.Context) error {
@@ -22,9 +36,9 @@ func CreateTodoItem(c echo.Context) error {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	item, dbErr := data.CreateTodoItem(ti)
-	if dbErr != nil {
-		return c.String(http.StatusInternalServerError, dbErr.Error())
+	item, err := data.CreateTodoItem(ti)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
 	location := c.Request().Host + c.Echo().URI(GetTodoItem, item.Id)
