@@ -109,3 +109,46 @@ func GetTodoItemById(id string) (*models.TodoItem, error) {
 
 	return &dbItem, nil
 }
+
+func CompleteTodoItem(id string) (bool, error) {
+	query := `
+		UPDATE todo_items
+		SET completed = true, updated_at = NOW()
+		WHERE id = $1;
+	`
+	result, err := pool.Exec(context.Background(), query, id)
+	if err != nil {
+		return false, err
+	}
+
+	return result.RowsAffected() > 0, nil
+}
+
+func UpdateTodoItem(id string, item *models.TodoItem) (dbItem *models.TodoItem, err error) {
+	dbItem = &models.TodoItem{}
+	query := `
+		UPDATE todo_items
+		SET title = $2, description = $3, due_date = $4, priority = $5, updated_at = NOW()
+		WHERE id = $1
+		RETURNING id, title, description, completed, created_at, updated_at, due_date, priority, user_id;
+	`
+	err = pool.QueryRow(context.Background(), query, id, item.Title, item.Description, item.DueDate, item.Priority).
+		Scan(
+			&dbItem.Id,
+			&dbItem.Title,
+			&dbItem.Description,
+			&dbItem.Completed,
+			&dbItem.CreatedAt,
+			&dbItem.UpdatedAt,
+			&dbItem.DueDate,
+			&dbItem.Priority,
+			&dbItem.UserId,
+		)
+	if err != nil {
+		return nil, err
+	}
+
+	return dbItem, nil
+}
+
+// todo - DeleteTodoItem

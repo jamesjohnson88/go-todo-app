@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"errors"
+	"github.com/jackc/pgx/v5"
 	"github.com/labstack/echo/v4"
 	"go-todo-app/data"
 	"go-todo-app/models"
@@ -48,19 +50,38 @@ func CreateTodoItem(c echo.Context) error {
 }
 
 func UpdateTodoItem(c echo.Context) error {
+	id := c.Param("id")
 	ti := new(models.TodoItem)
 	if err := c.Bind(ti); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	return c.String(http.StatusCreated, "Updated: "+c.Param("id"))
+	updatedItem, err := data.UpdateTodoItem(id, ti)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return c.NoContent(http.StatusNotFound)
+		}
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
+	return c.JSON(http.StatusOK, updatedItem)
 }
 
-func ResolveTodoItem(c echo.Context) error {
+func CompleteTodoItem(c echo.Context) error {
 	itemId := c.Param("id")
-	return c.String(http.StatusOK, "Resolved Todo Item: "+itemId)
+	itemCompleted, err := data.CompleteTodoItem(itemId)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	if itemCompleted {
+		return c.NoContent(http.StatusOK)
+	}
+
+	return c.NoContent(http.StatusNotFound)
 }
 
+// todo
 func DeleteTodoItem(c echo.Context) error {
 	itemId := c.Param("id")
 	return c.String(http.StatusOK, "Deleted Todo Item: "+itemId)

@@ -2,6 +2,7 @@ package models
 
 import "time"
 
+// Note: App will be very basic - otherwise DTOs should be considered to prevent leaky APIs
 type TodoItem struct {
 	Id          string     `json:"id"`
 	Title       string     `json:"title"`

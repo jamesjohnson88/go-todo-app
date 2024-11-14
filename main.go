@@ -39,7 +39,7 @@ func main() {
 	e.GET(tiBase+"/:id", handlers.GetTodoItem)
 	e.POST(tiBase, handlers.CreateTodoItem)
 	e.PUT(tiBase+"/:id", handlers.UpdateTodoItem)
-	e.PATCH(tiBase+"/resolve/:id", handlers.ResolveTodoItem)
+	e.PATCH(tiBase+"/:id/complete", handlers.CompleteTodoItem)
 	e.DELETE(tiBase+"/:id", handlers.DeleteTodoItem)
 
 	e.Logger.Fatal(e.Start(":1323"))
