@@ -151,4 +151,12 @@ func UpdateTodoItem(id string, item *models.TodoItem) (dbItem *models.TodoItem, 
 	return dbItem, nil
 }
 
-// todo - DeleteTodoItem
+func DeleteTodoItem(id string) (bool, error) {
+	query := `DELETE FROM todo_items WHERE id = $1;`
+	result, err := pool.Exec(context.Background(), query, id)
+	if err != nil {
+		return false, err
+	}
+
+	return result.RowsAffected() > 0, nil
+}

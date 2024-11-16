@@ -81,8 +81,16 @@ func CompleteTodoItem(c echo.Context) error {
 	return c.NoContent(http.StatusNotFound)
 }
 
-// todo
 func DeleteTodoItem(c echo.Context) error {
 	itemId := c.Param("id")
-	return c.String(http.StatusOK, "Deleted Todo Item: "+itemId)
+	itemDeleted, err := data.DeleteTodoItem(itemId)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	if itemDeleted {
+		return c.NoContent(http.StatusOK)
+	}
+
+	return c.NoContent(http.StatusNotFound)
 }
